@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Simulador didático de inferência fuzzy Mamdani para irrigação de jardins." />
+    <title>Simulador Fuzzy Mamdani</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <script type="module" src="./js/app.js"></script>
+  </head>
+  <body>
+    <div id="app" class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M16 3C12.4 9.3 7 15 7 20.4a9 9 0 0 0 18 0C25 15 19.6 9.3 16 3Z" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round" />
+              <path d="M11 21a5 5 0 0 0 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div class="brand-text">
+            <strong>Fuzzy Garden</strong>
+            <span>Simulador Mamdani</span>
+          </div>
+        </div>
+        <div class="course-label">Inteligência Artificial <span aria-hidden="true">·</span> UFPI</div>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-content">
+            <span class="eyebrow">Simulador de sistema fuzzy</span>
+            <h1 id="hero-title">Uma recomendação de irrigação que você consegue explicar.</h1>
+            <p>Explore como umidade do solo e temperatura se transformam em um tempo recomendado de irrigação por meio da inferência Mamdani.</p>
+            <div class="hero-tags" aria-label="Características do simulador">
+              <span>2 entradas</span>
+              <span>9 regras</span>
+              <span>5 etapas</span>
+            </div>
+          </div>
+          <div class="hero-status" aria-live="polite">
+            <span class="status-caption">Fase de desenvolvimento</span>
+            <span class="status-number">00</span>
+            <strong>Estrutura inicial</strong>
+            <span data-app-status>Carregando módulos...</span>
+          </div>
+        </section>
+
+        <section class="section-block" aria-labelledby="workflow-title">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">Visão geral</span>
+              <h2 id="workflow-title">As cinco etapas da inferência</h2>
+            </div>
+            <p>O fluxo matemático será implementado nas próximas etapas.</p>
+          </div>
+          <ol class="workflow-grid" data-stage-list aria-label="Etapas do processo Mamdani"></ol>
+        </section>
+
+        <div class="workspace-grid">
+          <section id="configuration-panel" class="panel" aria-labelledby="configuration-title">
+            <div class="panel-header">
+              <span class="panel-icon" aria-hidden="true">01</span>
+              <div>
+                <h2 id="configuration-title">Configuração</h2>
+                <p>Parâmetros do modelo</p>
+              </div>
+            </div>
+            <div class="placeholder-list">
+              <div class="placeholder-row"><strong>Entradas</strong><span>Umidade e temperatura</span></div>
+              <div class="placeholder-row"><strong>Base de regras</strong><span>Nove consequentes ajustáveis</span></div>
+              <div class="placeholder-row"><strong>Precisão</strong><span>Passo do centroide</span></div>
+            </div>
+            <p class="panel-note">Os controles serão adicionados após a implementação do motor matemático.</p>
+          </section>
+
+          <section id="charts-panel" class="panel" aria-labelledby="charts-title">
+            <div class="panel-header">
+              <span class="panel-icon" aria-hidden="true">02</span>
+              <div>
+                <h2 id="charts-title">Visualizações</h2>
+                <p>Conjuntos e inferência</p>
+              </div>
+            </div>
+            <div class="empty-state">
+              <div class="empty-state-symbol" aria-hidden="true">∿</div>
+              <strong>Gráficos em preparação</strong>
+              <p>Os conjuntos de entrada, os recortes e a região agregada serão apresentados aqui.</p>
+            </div>
+          </section>
+
+          <section id="results-panel" class="panel panel-results" aria-labelledby="results-title">
+            <div class="panel-header">
+              <span class="panel-icon" aria-hidden="true">03</span>
+              <div>
+                <h2 id="results-title">Resultado</h2>
+                <p>Tempo recomendado de irrigação</p>
+              </div>
+            </div>
+            <div class="result-placeholder">
+              <span class="result-dash">—</span>
+              <span>O cálculo estará disponível após a implementação da inferência.</span>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <span>Atividade Prática · Sistemas Fuzzy · 2026.2</span>
+        <span>Etapa 00 · Fundação do projeto</span>
+      </footer>
+    </div>
+  </body>
+</html>
