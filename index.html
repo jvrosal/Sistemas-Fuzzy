@@ -3,111 +3,92 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Simulador didático de inferência fuzzy Mamdani para irrigação de jardins." />
+    <meta name="description" content="Simulador didático de inferência fuzzy Mamdani para o tempo de irrigação de um jardim." />
     <title>Simulador Fuzzy Mamdani</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700&display=swap" />
     <link rel="stylesheet" href="./css/style.css" />
     <script type="module" src="./js/app.js"></script>
   </head>
   <body>
-    <div id="app" class="app-shell">
-      <header class="topbar">
-        <div class="brand">
-          <div class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 32 32" fill="none">
-              <path d="M16 3C12.4 9.3 7 15 7 20.4a9 9 0 0 0 18 0C25 15 19.6 9.3 16 3Z" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round" />
-              <path d="M11 21a5 5 0 0 0 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-          </div>
-          <div class="brand-text">
-            <strong>Fuzzy Garden</strong>
-            <span>Simulador Mamdani</span>
-          </div>
+    <div id="app" class="page">
+      <header class="masthead">
+        <div>
+          <h1>Simulador fuzzy de irrigação</h1>
+          <p>Recomenda por quanto tempo regar um jardim a partir da umidade do solo e da temperatura, usando inferência Mamdani.</p>
         </div>
-        <div class="course-label">Inteligência Artificial <span aria-hidden="true">·</span> UFPI</div>
+        <a class="repo-link" href="https://github.com/jvrosal/Sistemas-Fuzzy">Ver no GitHub</a>
       </header>
 
-      <main>
-        <section class="hero" aria-labelledby="hero-title">
-          <div class="hero-content">
-            <span class="eyebrow">Simulador de sistema fuzzy</span>
-            <h1 id="hero-title">Uma recomendação de irrigação que você consegue explicar.</h1>
-            <p>Explore como umidade do solo e temperatura se transformam em um tempo recomendado de irrigação por meio da inferência Mamdani.</p>
-            <div class="hero-tags" aria-label="Características do simulador">
-              <span>2 entradas</span>
-              <span>9 regras</span>
-              <span>5 etapas</span>
+      <main class="workbench">
+        <form class="controls" id="controls" novalidate aria-labelledby="controls-title">
+          <h2 id="controls-title" class="visually-hidden">Configuração</h2>
+
+          <div class="field" data-field="humidity">
+            <div class="field-row">
+              <label for="humidity-input">Umidade do solo</label>
+              <span class="number-box">
+                <input id="humidity-input" name="humidity" type="number" inputmode="decimal" min="0" max="100" step="any" value="35" aria-describedby="humidity-hint humidity-error" />
+                <span class="unit">%</span>
+              </span>
             </div>
+            <input class="slider slider-humidity" id="humidity-slider" type="range" min="0" max="100" step="0.5" value="35" aria-label="Umidade do solo, controle deslizante" />
+            <div class="scale" id="humidity-hint"><span>0 % seco</span><span>100 % encharcado</span></div>
+            <p class="field-error" id="humidity-error" role="alert"></p>
           </div>
-          <div class="hero-status" aria-live="polite">
-            <span class="status-caption">Fase de desenvolvimento</span>
-            <span class="status-number">01</span>
-            <strong>Conjuntos e regras definidos</strong>
-            <span data-app-status>Carregando módulos...</span>
+
+          <div class="field" data-field="temperature">
+            <div class="field-row">
+              <label for="temperature-input">Temperatura</label>
+              <span class="number-box">
+                <input id="temperature-input" name="temperature" type="number" inputmode="decimal" min="10" max="40" step="any" value="30" aria-describedby="temperature-hint temperature-error" />
+                <span class="unit">°C</span>
+              </span>
+            </div>
+            <input class="slider slider-temperature" id="temperature-slider" type="range" min="10" max="40" step="0.5" value="30" aria-label="Temperatura, controle deslizante" />
+            <div class="scale" id="temperature-hint"><span>10 °C</span><span>40 °C</span></div>
+            <p class="field-error" id="temperature-error" role="alert"></p>
           </div>
+
+          <fieldset class="rules">
+            <legend>Base de regras</legend>
+            <p class="help">Escolha o tempo de cada combinação de solo e temperatura. Os antecedentes são fixos.</p>
+            <table class="rule-matrix" data-rule-matrix>
+              <caption class="visually-hidden">Consequente de cada regra: linhas indicam a umidade, colunas indicam a temperatura</caption>
+            </table>
+            <div class="depth-key" aria-hidden="true">
+              <span><i data-consequent="curto"></i>curto</span>
+              <span><i data-consequent="medio"></i>médio</span>
+              <span><i data-consequent="longo"></i>longo</span>
+            </div>
+          </fieldset>
+
+          <fieldset class="step-choice">
+            <legend>Passo da defuzzificação (Δz)</legend>
+            <div class="segmented" data-step-options></div>
+          </fieldset>
+
+          <div class="actions">
+            <button type="submit" class="button button-primary" data-action="calculate">Calcular</button>
+            <button type="button" class="button" data-action="advance">Avançar etapa</button>
+            <button type="button" class="button-quiet" data-action="reset">Restaurar padrão</button>
+          </div>
+          <p class="notice" data-notice role="status" aria-live="polite"></p>
+        </form>
+
+        <section class="inference" aria-labelledby="inference-title">
+          <div class="inference-head">
+            <h2 id="inference-title">Inferência</h2>
+            <p class="run-status" data-app-status aria-live="polite">Carregando…</p>
+          </div>
+          <ol class="stages" data-stage-list aria-label="Etapas da inferência Mamdani"></ol>
         </section>
-
-        <section class="section-block" aria-labelledby="workflow-title">
-          <div class="section-heading">
-            <div>
-              <span class="section-kicker">Visão geral</span>
-              <h2 id="workflow-title">As cinco etapas da inferência</h2>
-            </div>
-            <p>Os conjuntos, as regras e os valores padrão já estão definidos. Os cálculos serão implementados nas próximas etapas.</p>
-          </div>
-          <ol class="workflow-grid" data-stage-list aria-label="Etapas do processo Mamdani"></ol>
-        </section>
-
-        <div class="workspace-grid">
-          <section id="configuration-panel" class="panel" aria-labelledby="configuration-title">
-            <div class="panel-header">
-              <span class="panel-icon" aria-hidden="true">01</span>
-              <div>
-                <h2 id="configuration-title">Configuração</h2>
-                <p>Parâmetros do modelo</p>
-              </div>
-            </div>
-            <div class="placeholder-list">
-              <div class="placeholder-row"><strong>Entradas</strong><span>Umidade e temperatura</span></div>
-              <div class="placeholder-row"><strong>Base de regras</strong><span>Nove consequentes ajustáveis</span></div>
-              <div class="placeholder-row"><strong>Precisão</strong><span>Passo do centroide</span></div>
-            </div>
-            <p class="panel-note">Os controles serão adicionados após a implementação do motor matemático.</p>
-          </section>
-
-          <section id="charts-panel" class="panel" aria-labelledby="charts-title">
-            <div class="panel-header">
-              <span class="panel-icon" aria-hidden="true">02</span>
-              <div>
-                <h2 id="charts-title">Visualizações</h2>
-                <p>Conjuntos e inferência</p>
-              </div>
-            </div>
-            <div class="empty-state">
-              <div class="empty-state-symbol" aria-hidden="true">∿</div>
-              <strong>Gráficos em preparação</strong>
-              <p>Os conjuntos de entrada, os recortes e a região agregada serão apresentados aqui.</p>
-            </div>
-          </section>
-
-          <section id="results-panel" class="panel panel-results" aria-labelledby="results-title">
-            <div class="panel-header">
-              <span class="panel-icon" aria-hidden="true">03</span>
-              <div>
-                <h2 id="results-title">Resultado</h2>
-                <p>Tempo recomendado de irrigação</p>
-              </div>
-            </div>
-            <div class="result-placeholder">
-              <span class="result-dash">—</span>
-              <span>O cálculo estará disponível após a implementação da inferência.</span>
-            </div>
-          </section>
-        </div>
       </main>
 
-      <footer class="footer">
-        <span>Atividade Prática · Sistemas Fuzzy · 2026.2</span>
-        <span>Etapa 01 · Configurações do modelo</span>
+      <footer class="colophon">
+        <p>Atividade Prática sobre Sistemas Fuzzy, disciplina de Inteligência Artificial, UFPI, 2026.2</p>
+        <p>Os graus de pertinência indicam compatibilidade com cada termo linguístico. Ou seja, não são valores de probabilidade.</p>
       </footer>
     </div>
   </body>
