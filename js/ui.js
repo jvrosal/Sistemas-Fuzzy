@@ -1,3 +1,5 @@
+
+import { createInputChart, createImplicationChart, createAggregationChart } from './charts.js';
 import { DEFUZZIFICATION_STEPS, DEFAULT_RULES, DOMAINS, FUZZY_SETS, INFERENCE_STAGES } from './constants.js';
 import {
   STAGE_COUNT,
@@ -103,7 +105,11 @@ function renderFuzzification(result) {
       el('tbody', {}, ...rows)
     );
   };
-  return el('div', { class: 'pair' }, block('humidity', humidity), block('temperature', temperature));
+  return el('div', { class: 'input-visuals' },
+    el('div', { class: 'pair' }, block('humidity', humidity), block('temperature', temperature)),
+    createInputChart('humidity', humidity),
+    createInputChart('temperature', temperature)
+  );
 }
 
 function renderEvaluation(result) {
@@ -135,9 +141,26 @@ function renderImplication(result) {
       ` concluiu ${label(rule.consequent)}; o conjunto ${label(rule.consequent)} é recortado na altura ${deg(rule.clipHeight)}.`
     )
   );
-  return el('div', {},
+  const selection = el('select', { 'aria-label': 'Selecione a regra para visualizar a implicação' },
+    ...result.implication.map((rule) => el('option', {
+      value: rule.id,
+      text: `${rule.id} — ${label(rule.consequent)} (h = ${deg(rule.clipHeight)})`
+    }))
+  );
+  const graphArea = el('div', { class: 'implication-chart' });
+  const showSelected = () => {
+    const rule = result.implication.find((item) => item.id === selection.value);
+    graphArea.replaceChildren(createImplicationChart(rule));
+  };
+  selection.value = active[0]?.id ?? result.implication[0].id;
+  selection.addEventListener('change', showSelected);
+  showSelected();
+  return el('div', { class: 'implication-visuals' },
     el('ul', { class: 'log' }, ...items),
-    idle > 0 ? el('p', { class: 'aside', text: `${idle} ${idle === 1 ? 'regra tem' : 'regras têm'} h = 0 e não contribuem para a saída.` }) : null
+    idle > 0 ? el('p', { class: 'aside', text: `${idle} ${idle === 1 ? 'regra tem' : 'regras têm'} h = 0 e não contribuem para a saída.` }) : null,
+    el('label', { class: 'rule-picker' },
+      el('span', { text: 'Visualizar implicação da regra' }), selection),
+    graphArea
   );
 }
 
@@ -163,7 +186,8 @@ function renderAggregation(result) {
     el('p', { text: 'Para cada z, a saída agregada é μ(z) = max(μ1(z), …, μ9(z)).' }),
     items.length
       ? el('ul', { class: 'log' }, ...items)
-      : el('p', { class: 'aside', text: 'Nenhum recorte com altura maior que zero.' })
+      : el('p', { class: 'aside', text: 'Nenhum recorte com altura maior que zero.' }),
+    createAggregationChart(result)
   );
 }
 
@@ -173,6 +197,7 @@ function renderDefuzzification(result) {
     return el('p', { class: 'outcome is-invalid', text: d.message });
   }
   return el('div', {},
+    createAggregationChart(result, true),
     el('p', { text: `Centroide por pontos médios: Δz = ${formatNumber(d.step)} min, ${d.sampleCount} amostras, z(k) = (k + 0,5) × Δz.` }),
     el('p', { class: 'num formula', text: `z* = Σ z·μ / Σ μ = ${formatNumber(d.numerator, 4)} / ${formatNumber(d.denominator, 4)} = ${formatNumber(d.time, 6)} min` }),
     el('p', { class: 'outcome' },
