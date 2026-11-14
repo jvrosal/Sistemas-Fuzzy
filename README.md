@@ -1,8 +1,8 @@
 # Simulador Fuzzy Mamdani — Irrigação de Jardim
 
-**Raiz** é um simulador didático de irrigação baseado em inferência fuzzy Mamdani, desenvolvido para a disciplina de **Inteligência Artificial** da **Universidade Federal do Piauí (UFPI)**, período **2026.2**.
+**Simulador Fuzzy** é um simulador didático de irrigação baseado em inferência fuzzy Mamdani, desenvolvido para a disciplina de **Inteligência Artificial** da **Universidade Federal do Piauí (UFPI)**, período **2026.2**.
 
-**[Código-fonte no GitHub](https://github.com/jvrosal/Sistemas-Fuzzy)** · **Aplicação no GitHub Pages:** endereço de publicação ainda não confirmado nesta revisão (ver [Repositório e publicação](#11-repositorio-e-publicacao)).
+**[Código-fonte no GitHub](https://github.com/jvrosal/Sistemas-Fuzzy)** · **Aplicação no GitHub Pages:** [https://jvrosal.github.io/Sistemas-Fuzzy/](https://jvrosal.github.io/Sistemas-Fuzzy/)
 
 ## Sumário
 
@@ -178,7 +178,10 @@ Sistemas-Fuzzy/
 │   └── ui.js
 └── tests/
     ├── index.html
-    └── tests.js
+    ├── tests.js
+    ├── state-tests.js
+    ├── chart-tests.js
+    └── ui-tests.js
 ```
 
 | Arquivo | Responsabilidade |
@@ -193,7 +196,10 @@ Sistemas-Fuzzy/
 | `js/state.js` | Validação, edição de parâmetros, cálculo, navegação e restauração |
 | `js/charts.js` | Gráficos SVG das entradas, implicação, agregação e centroide |
 | `js/ui.js` | Montagem dos controles e apresentação das operações |
-| `tests/index.html`, `tests/tests.js` | Página e suíte existente de testes do motor |
+| `tests/index.html`, `tests/tests.js` | Página de testes, suíte matemática original e execução dos novos grupos |
+| `tests/state-tests.js` | Validação, estado, edição de regras, restauração, navegação e determinismo |
+| `tests/chart-tests.js` | Curvas, recortes, agregação, marcadores e geometria dos SVGs |
+| `tests/ui-tests.js` | Interação com o HTML real, controles, mensagens, etapas e gráficos |
 
 A interface chama `runSimulation()` por meio do estado; o motor matemático permanece independente do DOM. Os gráficos utilizam os resultados da inferência, sem alterar os cálculos.
 
@@ -247,7 +253,11 @@ Os gráficos mostram os três conjuntos de cada entrada, valores marcados, graus
 
 Inicie o servidor estático conforme a [seção 7](#7-como-executar) e abra **http://localhost:8000/tests/**. A página `tests/index.html` carrega `tests/tests.js` e apresenta o resultado individual de cada verificação e um resumo com a quantidade aprovada.
 
-**A suíte do repositório é executada no navegador.** Não existe `package.json` nem comando `npm test` configurado neste projeto. Em auditoria separada, a mesma suíte foi executada com Node.js e DOM simulado, com **418 de 418 verificações aprovadas**. A execução em Node.js foi um procedimento de auditoria, não um comando oficial disponível no repositório.
+**A suíte do repositório é executada no navegador.** Não existe `package.json` nem comando `npm test` configurado neste projeto. As **418 verificações matemáticas originais foram preservadas**. Novos módulos acrescentam **79 testes de estado, 25 testes dos gráficos SVG e 66 testes de interface**, totalizando **588 verificações**.
+
+A suíte exibe os resultados por grupo. Nos testes de interface, `tests/ui-tests.js` carrega o `index.html` real, monta a aplicação em um contêiner isolado e dispara os eventos dos controles; portanto, é necessário executar a página por **HTTP**, e não por `file://`. Os gráficos são verificados por sua estrutura SVG e por marcações numéricas, inclusive no centroide.
+
+Em auditoria local, os **588 testes passaram em Chromium** com os módulos reunidos temporariamente para superar as restrições de navegação do ambiente de verificação. Essa execução não substitui conferir o carregamento nativo dos módulos no servidor estático e no GitHub Pages antes da entrega.
 
 A documentação abaixo segue as **seções 6.1 a 6.5 do enunciado**. Em cada caso, informa configuração, resultado obtido, referência e conclusão. Salvo quando indicado, a base é a **R1–R9 padrão** e o passo é **Δz = 0,1 minuto**. As tolerâncias do enunciado são **0,000001** para pertinências e ativações e **0,01 minuto** para tempos.
 
@@ -278,7 +288,7 @@ A documentação abaixo segue as **seções 6.1 a 6.5 do enunciado**. Em cada ca
 
 **Conclusão:** cada situação ativa uma única regra e recupera o conjunto de saída completo. Os valores de aproximadamente 5 e 25 minutos vêm do **centroide dos triângulos**, não de seus picos; solo úmido não implica automaticamente tempo zero neste modelo.
 
-### 9.4. Sobreposição de regras 
+### 9.4. Sobreposição de regras
 
 **Configuração:** U = 35%, T = 30 °C; base padrão; Δz = 0,1 (300 pontos médios).
 
@@ -315,7 +325,7 @@ Os recortes são combinados pelo **máximo**. As três regras com consequente lo
 
 **Conclusão:** aprovado para fuzzificação, ativações, implicação por mínimo, agregação por máximo e centroide. A sobreposição não produz soma indevida de áreas ou alturas.
 
-### 9.5. Simetria, edição de regras e precisão 
+### 9.5. Simetria, edição de regras e precisão
 
 **Teste de simetria — base padrão, Δz = 0,1:**
 
@@ -343,7 +353,7 @@ Os três conjuntos de saída são recortados em 0,5, e a união por máximo gera
 
 **Conclusão:** os resultados convergem para o centroide contínuo de aproximadamente **16,785714286 min** conforme o passo diminui. A precisão interna melhora, mas o valor mostrado com duas casas decimais continua **16,79 min** em todos os três casos. Os antecedentes e conjuntos permanecem inalterados.
 
-### 9.6. Interface e determinismo 
+### 9.6. Interface e determinismo
 
 **Configuração de entradas inválidas:** regras padrão, Δz = 0,1; a variável não alterada permanece no valor inicial.
 
@@ -365,7 +375,7 @@ Os três conjuntos de saída são recortados em 0,5, e a união por máximo gera
 | Avançar pelas cinco operações | Mesma saída numérica, na ordem correta | Aprovado |
 | Rever do início | Retorna à primeira visualização sem alterar o cálculo | Aprovado |
 | Editar umidade, consequente ou passo | Resultado anterior descartado e apresentação reiniciada | Aprovado |
-| Apenas mudar o gráfico apresentado | O gráfico utiliza resultados do motor, sem alterá-los | Conforme à arquitetura; cobertura automatizada de renderização ainda pendente |
+| Apenas mudar o gráfico apresentado | O gráfico utiliza resultados do motor, sem alterá-los | Aprovado nos testes de gráficos e interface |
 
 **Conclusão:** as entradas inválidas foram bloqueadas, as configurações válidas tiveram resultados determinísticos e as duas modalidades de navegação apresentaram a mesma saída. A validação separada dos gráficos e controles não deve ser confundida com a suíte permanente do repositório.
 
@@ -373,22 +383,21 @@ Os três conjuntos de saída são recortados em 0,5, e a união por máximo gera
 
 | Evidência | Resultado registrado | Origem |
 |---|---|---|
-| Suíte matemática existente (`tests/tests.js`) | **418/418 aprovados** | Auditoria da suíte em Node.js com DOM simulado |
-| Verificações adicionais de estados e cenários | **19/19 aprovadas** | Auditoria separada dos módulos |
-| Verificações de interface | **65/65 aprovadas** | Auditoria anterior em Chromium |
+| Suíte matemática | **418/418 aprovados** | `tests/tests.js` |
+| Testes de estado e validação | **79/79 aprovados** | `tests/state-tests.js` |
+| Testes de gráficos SVG | **25/25 aprovados** | `tests/chart-tests.js` |
+| Testes da interface real | **66/66 aprovados** | `tests/ui-tests.js` |
+| **Total integrado** | **588/588 aprovados** | Auditoria local em Chromium, com módulos reunidos apenas para a execução |
+
 
 ## 10. Situação atual
 
-**Implementado:** modelo fuzzy completo, nove regras configuráveis pelos consequentes, validação de entradas, cálculo direto e progressivo, restauração e visualizações SVG. A suíte matemática existente passou nas verificações registradas na seção 9.
+**Implementado:** modelo fuzzy completo, nove regras configuráveis pelos consequentes, validação de entradas, cálculo direto e progressivo, restauração e visualizações SVG. A suíte integrada mantém os 418 testes matemáticos e acrescenta cobertura permanente do estado, dos controles e dos gráficos, totalizando 588 verificações aprovadas na auditoria local descrita na seção 9.
 
 ## 11. Repositório e publicação
 
 - **Repositório público:** [github.com/jvrosal/Sistemas-Fuzzy](https://github.com/jvrosal/Sistemas-Fuzzy)
 - **Aplicação (GitHub Pages):** [https://jvrosal.github.io/Sistemas-Fuzzy/](https://jvrosal.github.io/Sistemas-Fuzzy/)
-
-O GitHub Pages deve publicar a branch que contém a versão final, com `index.html` na pasta `/(root)`. Não é necessário contratar domínio próprio. A aplicação publicada deve funcionar **sem login nem instalação** e oferecer um link visível ao repositório — disponível na interface pelo controle **Código no GitHub**.
-
-**Atenção:** o repositório público, isoladamente, não substitui o endereço da aplicação exigido no enunciado.
 
 ## 12. Autores
 

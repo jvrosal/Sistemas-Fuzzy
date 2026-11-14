@@ -14,13 +14,17 @@ import { evaluateRules, validateRules, applyImplication, getImpliedMembership,
   aggregateImplications, getAggregatedMembership } from '../js/inference.js';
 import { calculateCentroid } from '../js/defuzzification.js';
 import { runSimulation } from '../js/simulator.js';
+import { runStateTests } from './state-tests.js';
+import { runChartTests } from './chart-tests.js';
+import { runUITests } from './ui-tests.js';
 
 const results = document.querySelector('#test-results');
 const summary = document.querySelector('#test-summary');
 const tests = [];
+const originalPageTitle = document.title;
 
-function check(name, condition) {
-  tests.push({ name, passed: Boolean(condition) });
+function check(name, condition, group = 'Motor Mamdani') {
+  tests.push({ name, passed: Boolean(condition), group });
 }
 
 function equal(actual, expected) {
@@ -857,22 +861,44 @@ for (const moduleName of modules) {
   }
 }
 
+
+// Os testes originais permanecem; os novos grupos ampliam a cobertura da aplicação.
+runStateTests((name, passed) => check(name, passed, 'Estado e validação'));
+runChartTests((name, passed) => check(name, passed, 'Gráficos SVG'));
+await runUITests((name, passed) => check(name, passed, 'Interface real'));
+
 results.replaceChildren();
 
-for (const test of tests) {
-  const row = document.createElement('div');
-  const label = document.createElement('strong');
-  const state = document.createElement('span');
+const groups = [...new Set(tests.map((test) => test.group))];
+for (const groupName of groups) {
+  const groupTests = tests.filter((test) => test.group === groupName);
+  const groupPassed = groupTests.filter((test) => test.passed).length;
+  const section = document.createElement('section');
+  section.className = 'test-group';
+  const heading = document.createElement('h2');
+  heading.className = 'test-group-title';
+  heading.textContent = `${groupName} — ${groupPassed}/${groupTests.length} aprovados`;
+  section.append(heading);
 
-  row.className = 'test-result';
-  label.textContent = test.name;
-  state.className = test.passed ? 'test-pass' : 'test-fail';
-  state.textContent = test.passed ? 'Aprovado' : 'Falhou';
-  row.append(label, state);
-  results.append(row);
+  for (const test of groupTests) {
+    const row = document.createElement('div');
+    const label = document.createElement('strong');
+    const state = document.createElement('span');
+    row.className = 'test-result';
+    label.textContent = test.name;
+    state.className = test.passed ? 'test-pass' : 'test-fail';
+    state.textContent = test.passed ? 'Aprovado' : 'Falhou';
+    row.append(label, state);
+    section.append(row);
+  }
+  results.append(section);
 }
+
 
 const passed = tests.filter((test) => test.passed).length;
 summary.textContent = `${passed} de ${tests.length} testes aprovados.`;
 summary.dataset.passed = String(passed);
 summary.dataset.total = String(tests.length);
+summary.classList.toggle('test-fail', passed !== tests.length);
+summary.classList.toggle('test-pass', passed === tests.length);
+document.title = originalPageTitle;

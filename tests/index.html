@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -15,19 +14,27 @@
       .test-result span { font-weight: 700; }
       .test-pass { color: #11856b; }
       .test-fail { color: #c33c38; }
-      .test-summary { margin-top: 20px; color: #4e697a; font-size: 14px; }
+      .test-summary { margin: 18px 0; color: #4e697a; font-size: 15px; font-weight: 700; }
+      .test-group { margin: 26px 0 0; }
+      .test-group-title { margin: 0 0 10px; padding: 12px 0; border-bottom: 2px solid #dbe5ed; font-size: 18px; color: #14253b; }
+      .test-result strong { font-weight: 500; }
+      .test-result span { white-space: nowrap; }
+      .test-page { max-width: 900px; }
+      @media (max-width: 560px) {
+        .test-result { align-items: start; flex-direction: column; gap: 4px; }
+      }
     </style>
   </head>
   <body>
     <main class="test-page">
       <div class="test-header">
-        <span class="section-kicker">Validação inicial</span>
+        <span class="section-kicker">Validação completa</span>
         <h1 style="color:#14253b;font-size:32px;margin:12px 0">Testes do simulador</h1>
-        <p>Verificações da estrutura, dos conjuntos, da fuzzificação, da avaliação das regras, da implicação, da agregação, da defuzzificação pelo centroide e da inferência integrada.</p>
+        <p>Suíte matemática original preservada e testes adicionais do estado, dos controles, da navegação e dos gráficos SVG. A interface é testada com o HTML real do simulador e eventos do navegador, em um contêiner isolado.</p>
       </div>
       <section class="panel" aria-label="Resultados dos testes">
-        <div id="test-results" aria-live="polite">Executando testes...</div>
-        <p id="test-summary" class="test-summary"></p>
+        <p id="test-summary" class="test-summary" role="status" aria-live="polite">Executando testes...</p>
+        <div id="test-results"></div>
       </section>
       <p style="margin-top:24px"><a href="../index.html" style="color:#087c69">Voltar para o simulador</a></p>
     </main>
