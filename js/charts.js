@@ -7,14 +7,14 @@ import { getAggregatedMembership } from './inference.js';
 // SVG é usado apenas para apresentação; nunca altera os resultados da inferência.
 const NS = 'http://www.w3.org/2000/svg';
 const COLORS = Object.freeze({
-  primeiro: '#b56d32',
-  segundo: '#277c86',
-  terceiro: '#755da8',
-  recorte: '#176aa5',
-  agregado: '#176aa5',
-  centroide: '#bb4b35',
-  grade: '#dfe4df',
-  eixo: '#59666a'
+  primeiro: '#c1834c',
+  segundo: '#267da8',
+  terceiro: '#566c99',
+  recorte: '#1c6699',
+  agregado: '#1c6699',
+  centroide: '#b2533b',
+  grade: '#e2e9f0',
+  eixo: '#64788b'
 });
 const MARGIN = { top: 22, right: 18, bottom: 48, left: 48 };
 const WIDTH = 640;

@@ -217,6 +217,8 @@ export function mountSimulator(root) {
   const stageItems = [...root.querySelectorAll('[data-stage-list] > li')];
   const status = root.querySelector('[data-app-status]');
   const notice = root.querySelector('[data-notice]');
+  const overviewGraphs = root.querySelector('[data-overview-graphs]');
+  const summaryResult = root.querySelector('[data-result-summary]');
   const matrix = root.querySelector('[data-rule-matrix]');
   const stepOptions = root.querySelector('[data-step-options]');
   const buttons = {
@@ -272,11 +274,48 @@ export function mountSimulator(root) {
 
     renderStages();
     renderMatrixActivation();
+    renderOverview(inputs);
+    renderSummary();
 
     notice.textContent = state.notice ? NOTICES[state.notice] : '';
     notice.dataset.kind = state.notice ?? '';
     status.textContent = statusText(inputs);
     root.classList.toggle('has-result', Boolean(state.result));
+  }
+
+  function renderOverview(inputs) {
+    if (!overviewGraphs) return;
+    if (!inputs.valid) {
+      overviewGraphs.replaceChildren(el('p', {
+        class: 'preview-error',
+        text: 'Corrija os valores de entrada para visualizar os conjuntos.'
+      }));
+      return;
+    }
+    if (state.result) return;
+    overviewGraphs.replaceChildren(
+      createInputChart('humidity', inputs.humidity),
+      createInputChart('temperature', inputs.temperature)
+    );
+  }
+
+  function renderSummary() {
+    if (!summaryResult) return;
+    const defuzz = state.result?.defuzzification;
+    const visible = state.stageIndex === STAGE_COUNT && defuzz?.valid;
+    summaryResult.hidden = !visible;
+    if (!visible) {
+      summaryResult.replaceChildren();
+      return;
+    }
+    summaryResult.replaceChildren(
+      el('span', { class: 'summary-label', text: 'TEMPO RECOMENDADO' }),
+      el('p', { class: 'summary-value' },
+        el('strong', { text: formatNumber(defuzz.time, 2) }),
+        el('span', { text: ' minutos' })
+      ),
+      el('p', { class: 'summary-note', text: `Centroide numérico | Δz = ${formatNumber(defuzz.step)} min` })
+    );
   }
 
   function renderStages() {

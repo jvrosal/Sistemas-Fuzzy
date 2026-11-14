@@ -4,289 +4,140 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f5f7fa">
-  <meta name="description" content="Simulador de irrigação com sistemas fuzzy Mamdani. Configure as entradas, acompanhe as regras e visualize a inferência.">
-
+  <meta name="theme-color" content="#102b46">
+  <meta name="description" content="Raiz: simulador didático de irrigação por inferência fuzzy Mamdani.">
   <title>Raiz | Simulador de Irrigação Fuzzy</title>
-
   <link rel="stylesheet" href="./css/style.css">
   <script type="module" src="./js/app.js"></script>
 </head>
-
 <body>
   <div id="app" class="page">
-
-    <!-- Cabeçalho -->
     <header class="masthead">
       <div class="brand">
         <a href="#app" class="brand-name">raiz<span>.</span></a>
-        <span class="brand-description">Simulador Fuzzy</span>
+        <span class="brand-description">Laboratório de lógica fuzzy</span>
       </div>
-
       <div class="header-right">
-        <span class="header-course">Inteligência Artificial — UFPI</span>
-
-        <a
-          class="repo-link"
-          href="https://github.com/jvrosal/Sistemas-Fuzzy"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub
-        </a>
+        <span class="header-course">UFPI / Inteligência Artificial / 2026.2</span>
+        <a class="repo-link" href="https://github.com/jvrosal/Sistemas-Fuzzy" target="_blank" rel="noopener noreferrer">Código no GitHub</a>
       </div>
     </header>
 
-    <!-- Apresentação -->
     <section class="intro" aria-labelledby="page-title">
       <div class="intro-content">
-        <span class="intro-label">SISTEMAS FUZZY</span>
-
-        <h1 id="page-title">Simulador de irrigação</h1>
-
-        <p>
-          Determine o tempo de irrigação de um jardim com base na
-          umidade do solo e na temperatura ambiente. Configure os
-          parâmetros e acompanhe as cinco etapas da inferência Mamdani.
-        </p>
+        <p class="intro-label">Simulação 01 / Modelo Mamdani</p>
+        <h1 id="page-title">Quanto tempo o jardim precisa de água?</h1>
+        <p class="intro-description">Uma simulação de irrigação baseada em regras. Ajuste as condições do ambiente, observe as curvas de pertinência e acompanhe como o modelo determina o tempo de irrigação.</p>
+      </div>
+      <div class="model-notation" aria-hidden="true">
+        <span>ENTRADAS</span>
+        <strong>U + T</strong>
+        <span>SAÍDA</span>
+        <strong>z (min)</strong>
       </div>
     </section>
 
-    <!-- Aplicação -->
     <main class="workbench">
-
-      <!-- Painel de configuração -->
-      <form
-        class="controls"
-        id="controls"
-        novalidate
-        aria-labelledby="controls-title"
-      >
-
+      <form class="controls" id="controls" novalidate aria-labelledby="controls-title">
         <div class="panel-heading">
-          <span class="section-label">CONFIGURAÇÃO</span>
-          <h2 id="controls-title">Parâmetros de entrada</h2>
-          <p>Informe as condições do ambiente para iniciar a simulação.</p>
+          <span class="section-label">01 — PARÂMETROS</span>
+          <h2 id="controls-title">Condições do jardim</h2>
+          <p>As alterações reiniciam o cálculo.</p>
         </div>
 
         <div class="control-group">
-
-          <!-- Umidade -->
           <div class="field" data-field="humidity">
             <div class="field-row">
               <label for="humidity-input">Umidade do solo</label>
-
               <div class="number-box">
-                <input
-                  id="humidity-input"
-                  name="humidity"
-                  type="number"
-                  inputmode="decimal"
-                  min="0"
-                  max="100"
-                  step="any"
-                  value="35"
-                  aria-describedby="humidity-hint humidity-error"
-                >
+                <input id="humidity-input" name="humidity" type="number" inputmode="decimal" min="0" max="100" step="any" value="35" aria-describedby="humidity-hint humidity-error">
                 <span class="unit">%</span>
               </div>
             </div>
-
-            <input
-              class="slider slider-humidity"
-              id="humidity-slider"
-              type="range"
-              min="0"
-              max="100"
-              step="0.5"
-              value="35"
-              aria-label="Umidade do solo"
-            >
-
-            <div class="scale" id="humidity-hint">
-              <span>0% — Seco</span>
-              <span>100% — Úmido</span>
-            </div>
-
+            <input class="slider slider-humidity" id="humidity-slider" type="range" min="0" max="100" step="0.5" value="35" aria-label="Umidade do solo">
+            <div class="scale" id="humidity-hint"><span>0% / Seco</span><span>100% / Úmido</span></div>
             <p class="field-error" id="humidity-error" role="alert"></p>
           </div>
-
-          <!-- Temperatura -->
           <div class="field" data-field="temperature">
             <div class="field-row">
               <label for="temperature-input">Temperatura ambiente</label>
-
               <div class="number-box">
-                <input
-                  id="temperature-input"
-                  name="temperature"
-                  type="number"
-                  inputmode="decimal"
-                  min="10"
-                  max="40"
-                  step="any"
-                  value="30"
-                  aria-describedby="temperature-hint temperature-error"
-                >
+                <input id="temperature-input" name="temperature" type="number" inputmode="decimal" min="10" max="40" step="any" value="30" aria-describedby="temperature-hint temperature-error">
                 <span class="unit">°C</span>
               </div>
             </div>
-
-            <input
-              class="slider slider-temperature"
-              id="temperature-slider"
-              type="range"
-              min="10"
-              max="40"
-              step="0.5"
-              value="30"
-              aria-label="Temperatura ambiente"
-            >
-
-            <div class="scale" id="temperature-hint">
-              <span>10 °C</span>
-              <span>40 °C</span>
-            </div>
-
+            <input class="slider slider-temperature" id="temperature-slider" type="range" min="10" max="40" step="0.5" value="30" aria-label="Temperatura ambiente">
+            <div class="scale" id="temperature-hint"><span>10 °C</span><span>40 °C</span></div>
             <p class="field-error" id="temperature-error" role="alert"></p>
           </div>
-
         </div>
 
-        <!-- Matriz de regras -->
         <fieldset class="rules">
           <legend>Base de regras</legend>
-
-          <p class="help">
-            Configure o consequente das nove regras.
-            As linhas representam a umidade e as colunas a temperatura.
-          </p>
-
+          <p class="help">Defina o tempo de cada combinação. Solo nas linhas, temperatura nas colunas.</p>
           <div class="matrix-scroll">
             <table class="rule-matrix" data-rule-matrix>
-              <caption class="visually-hidden">
-                Matriz de regras fuzzy com umidade nas linhas
-                e temperatura nas colunas.
-              </caption>
+              <caption class="visually-hidden">Consequentes das nove regras fuzzy</caption>
             </table>
           </div>
-
           <div class="depth-key" aria-hidden="true">
-            <span>
-              <i data-consequent="curto"></i>
-              Curto
-            </span>
-            <span>
-              <i data-consequent="medio"></i>
-              Médio
-            </span>
-            <span>
-              <i data-consequent="longo"></i>
-              Longo
-            </span>
+            <span><i data-consequent="curto"></i>Curto</span>
+            <span><i data-consequent="medio"></i>Médio</span>
+            <span><i data-consequent="longo"></i>Longo</span>
           </div>
         </fieldset>
 
-        <!-- Passo numérico -->
         <fieldset class="step-choice">
-          <legend>Passo de defuzzificação</legend>
-
-          <p class="help">
-            Selecione a precisão do cálculo do centroide (Δz).
-          </p>
-
+          <legend>Precisão do centroide</legend>
+          <p class="help">Passo de defuzzificação (Δz)</p>
           <div class="segmented" data-step-options></div>
         </fieldset>
 
-        <!-- Ações -->
         <div class="actions">
-          <button
-            type="submit"
-            class="button button-primary"
-            data-action="calculate"
-          >
-            Calcular irrigação
-          </button>
-
-          <button
-            type="button"
-            class="button button-secondary"
-            data-action="advance"
-          >
-            Avançar etapa
-          </button>
-
-          <button
-            type="button"
-            class="button-quiet"
-            data-action="reset"
-          >
-            Restaurar padrão
-          </button>
+          <button class="button button-primary" type="submit" data-action="calculate">Calcular irrigação</button>
+          <button class="button button-secondary" type="button" data-action="advance">Avançar etapa</button>
+          <button class="button-quiet" type="button" data-action="reset">Restaurar padrão</button>
         </div>
-
-        <p
-          class="notice"
-          data-notice
-          role="status"
-          aria-live="polite"
-        ></p>
-
+        <p class="notice" data-notice role="status" aria-live="polite"></p>
       </form>
 
-      <!-- Resultados -->
-      <section
-        class="inference"
-        aria-labelledby="inference-title"
-      >
-
+      <section class="inference" aria-labelledby="inference-title">
         <div class="inference-head">
           <div>
-            <span class="section-label">RESULTADOS</span>
-            <h2 id="inference-title">Etapas da inferência</h2>
-            <p class="inference-subtitle">
-              Acompanhe o processamento do sistema fuzzy.
-            </p>
+            <span class="section-label">02 — ANÁLISE</span>
+            <h2 id="inference-title">Leitura do modelo</h2>
+            <p class="inference-subtitle">Das entradas ao centroide, sem etapas ocultas.</p>
           </div>
-
-          <span class="method-tag">Mamdani · Min–Max</span>
+          <span class="method-tag">Mamdani / min–max</span>
         </div>
+        <div class="run-banner"><span class="run-status" data-app-status aria-live="polite">Carregando simulador...</span></div>
 
-        <div class="run-banner">
-          <p
-            class="run-status"
-            data-app-status
-            aria-live="polite"
-          >
-            Carregando simulador...
-          </p>
+        <section class="overview" data-overview aria-labelledby="overview-title">
+          <div class="overview-head">
+            <div>
+              <h3 id="overview-title">Curvas das variáveis de entrada</h3>
+              <p>Visualização dos conjuntos fuzzy nos valores informados.</p>
+            </div>
+            <span class="overview-note">prévia dos conjuntos</span>
+          </div>
+          <div class="overview-graphs" data-overview-graphs></div>
+        </section>
+
+        <section class="summary-result" data-result-summary aria-live="polite" hidden></section>
+
+        <div class="stages-heading">
+          <h3>Etapas da inferência</h3>
+          <span>5 etapas</span>
         </div>
-
-        <ol
-          class="stages"
-          data-stage-list
-          aria-label="Etapas da inferência Mamdani"
-        ></ol>
-
+        <ol class="stages" data-stage-list aria-label="Etapas da inferência Mamdani"></ol>
       </section>
-
     </main>
 
-    <!-- Rodapé -->
     <footer class="colophon">
-      <div class="footer-main">
-        <span class="footer-brand">raiz.</span>
-        <span>Simulador de Sistemas Fuzzy</span>
-      </div>
-
-      <span>Inteligência Artificial — UFPI, 2026.2</span>
-
-      <p>
-        Os graus de pertinência representam compatibilidade com
-        os conjuntos linguísticos, não probabilidades.
-      </p>
+      <span><strong>raiz.</strong> / Simulador de Sistemas Fuzzy</span>
+      <span>Universidade Federal do Piauí — 2026.2</span>
+      <p>Os graus de pertinência indicam compatibilidade com conjuntos linguísticos, não probabilidades.</p>
     </footer>
-
   </div>
 </body>
 </html>
